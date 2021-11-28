@@ -1,0 +1,10 @@
+{
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "Juan Henao",
+  "email": "juanhenao21@gmail.com",
+  "friendly_name": "Job Application",
+  "github_user": "juanhenao21",
+  "package_name": "job_application",
+  "project_name": "job-application",
+  "version": "0.0.0"
+}

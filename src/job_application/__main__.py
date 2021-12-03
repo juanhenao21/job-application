@@ -9,7 +9,6 @@ def main() -> None:
 
     Python package to test the data analysis cases for a job application.
     """
-
     click.echo("Hello, world!")
 
 

@@ -13,8 +13,8 @@ from nox.sessions import Session
 
 package = "job_application"
 python_versions = ["3.9"]
-nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
-
+# nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
+nox.options.sessions = ["tests"]
 
 class Poetry:
     """Helper class for invoking Poetry inside a Nox session.
@@ -44,6 +44,7 @@ class Poetry:
                 "export",
                 *args,
                 "--format=requirements.txt",
+                "--without-hashes",
                 f"--output={requirements}",
                 external=True,
             )
@@ -69,45 +70,45 @@ class Poetry:
         self.session.run("poetry", "build", *args, external=True)
 
 
-# def install_package(session: Session) -> None:
-#     """Build and install the package.
+def install_package(session: Session) -> None:
+    """Build and install the package.
 
-#     Build a wheel from the package, and install it into the virtual environment
-#     of the specified Nox session.
+    Build a wheel from the package, and install it into the virtual environment
+    of the specified Nox session.
 
-#     The package requirements are installed using the versions specified in
-#     Poetry's lock file.
+    The package requirements are installed using the versions specified in
+    Poetry's lock file.
 
-#     Args:
-#         session: The Session object.
-#     """
-#     poetry = Poetry(session)
+    Args:
+        session: The Session object.
+    """
+    poetry = Poetry(session)
 
-#     with poetry.export() as requirements:
-#         session.install(f"--requirement={requirements}")
+    with poetry.export() as requirements:
+        session.install(f"--requirement={requirements}")
 
-#     poetry.build("--format=wheel")
+    poetry.build("--format=wheel")
 
-#     version = poetry.version()
-#     session.install(
-#         "--no-deps", "--force-reinstall", f"dist/{package}-{version}-py3-none-any.whl"
-#     )
+    version = poetry.version()
+    session.install(
+        "--no-deps", "--force-reinstall", f"dist/{package}-{version}-py3-none-any.whl"
+    )
 
 
-# def install(session: Session, *args: str) -> None:
-#     """Install development dependencies into the session's virtual environment.
+def install(session: Session, *args: str) -> None:
+    """Install development dependencies into the session's virtual environment.
 
-#     This function is a wrapper for nox.sessions.Session.install.
+    This function is a wrapper for nox.sessions.Session.install.
 
-#     The packages must be managed as development dependencies in Poetry.
+    The packages must be managed as development dependencies in Poetry.
 
-#     Args:
-#         session: The Session object.
-#         args: Command-line arguments for ``pip install``.
-#     """
-#     poetry = Poetry(session)
-#     with poetry.export("--dev") as requirements:
-#         session.install(f"--constraint={requirements}", *args)
+    Args:
+        session: The Session object.
+        args: Command-line arguments for ``pip install``.
+    """
+    poetry = Poetry(session)
+    with poetry.export("--dev") as requirements:
+        session.install(f"--constraint={requirements}", *args)
 
 
 # @nox.session(name="pre-commit", python="3.9")
@@ -138,30 +139,30 @@ class Poetry:
 #         session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
 
 
-# @nox.session(python=python_versions)
-# def tests(session: Session) -> None:
-#     """Run the test suite."""
-#     install_package(session)
-#     install(session, "coverage[toml]", "pytest")
-#     try:
-#         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
-#     finally:
-#         session.notify("coverage")
+@nox.session(python=python_versions)
+def tests(session: Session) -> None:
+    """Run the test suite."""
+    install_package(session)
+    install(session, "coverage[toml]", "pytest")
+    try:
+        session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
+    finally:
+        session.notify("coverage")
 
 
-# @nox.session
-# def coverage(session: Session) -> None:
-#     """Produce the coverage report."""
-#     # Do not use session.posargs unless this is the only session.
-#     has_args = session.posargs and len(session._runner.manifest) == 1
-#     args = session.posargs if has_args else ["report"]
+@nox.session
+def coverage(session: Session) -> None:
+    """Produce the coverage report."""
+    # Do not use session.posargs unless this is the only session.
+    has_args = session.posargs and len(session._runner.manifest) == 1
+    args = session.posargs if has_args else ["report"]
 
-#     install(session, "coverage[toml]")
+    install(session, "coverage[toml]")
 
-#     if not has_args and any(Path().glob(".coverage.*")):
-#         session.run("coverage", "combine")
+    if not has_args and any(Path().glob(".coverage.*")):
+        session.run("coverage", "combine")
 
-#     session.run("coverage", *args)
+    session.run("coverage", *args)
 
 
 # @nox.session(python=python_versions)

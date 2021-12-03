@@ -1,7 +1,5 @@
 """Nox sessions."""
 import contextlib
-# import shutil
-# import sys
 import tempfile
 from pathlib import Path
 from typing import cast
@@ -9,6 +7,8 @@ from typing import Iterator
 
 import nox
 from nox.sessions import Session
+# import shutil
+# import sys
 
 
 package = "job_application"

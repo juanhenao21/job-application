@@ -12,7 +12,7 @@ from nox.sessions import Session
 
 
 package = "job_application"
-python_versions = ["3.8", "3.7", "3.6"]
+python_versions = ["3.9"]
 nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
 
 
@@ -110,7 +110,7 @@ def install(session: Session, *args: str) -> None:
         session.install(f"--constraint={requirements}", *args)
 
 
-@nox.session(name="pre-commit", python="3.8")
+@nox.session(name="pre-commit", python="3.9")
 def precommit(session: Session) -> None:
     """Lint using pre-commit."""
     args = session.posargs or ["run", "--all-files", "--show-diff-on-failure"]
@@ -118,7 +118,7 @@ def precommit(session: Session) -> None:
     session.run("pre-commit", *args)
 
 
-@nox.session(python="3.8")
+@nox.session(python="3.9")
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     poetry = Poetry(session)
@@ -181,7 +181,7 @@ def xdoctest(session: Session) -> None:
     session.run("python", "-m", "xdoctest", package, *args)
 
 
-@nox.session(python="3.8")
+@nox.session(python="3.9")
 def docs(session: Session) -> None:
     """Build the documentation."""
     args = session.posargs or ["docs", "docs/_build"]

@@ -14,7 +14,8 @@ from nox.sessions import Session
 package = "job_application"
 python_versions = ["3.9"]
 # nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
-nox.options.sessions = ["tests"]
+nox.options.sessions = "pre-commit", "tests"
+
 
 class Poetry:
     """Helper class for invoking Poetry inside a Nox session.
@@ -111,12 +112,14 @@ def install(session: Session, *args: str) -> None:
         session.install(f"--constraint={requirements}", *args)
 
 
-# @nox.session(name="pre-commit", python="3.9")
-# def precommit(session: Session) -> None:
-#     """Lint using pre-commit."""
-#     args = session.posargs or ["run", "--all-files", "--show-diff-on-failure"]
-#     install(session, "pre-commit")
-#     session.run("pre-commit", *args)
+@nox.session(name="pre-commit", python="3.9")
+def precommit(session: Session) -> None:
+    """Lint using pre-commit."""
+    args = session.posargs or ["run", "--all-files", "--show-diff-on-failure"]
+    install(session, "black", "darglint", "flake8","flake8-bandit", "flake8-bugbear",
+            "flake8-docstrings", "flake8-rst-docstrings", "pep8-naming",
+            "pre-commit", "pre-commit-hooks", "pyupgrade", "reorder-python-imports",)
+    session.run("pre-commit", *args)
 
 
 # @nox.session(python="3.9")

@@ -69,134 +69,134 @@ class Poetry:
         self.session.run("poetry", "build", *args, external=True)
 
 
-def install_package(session: Session) -> None:
-    """Build and install the package.
+# def install_package(session: Session) -> None:
+#     """Build and install the package.
 
-    Build a wheel from the package, and install it into the virtual environment
-    of the specified Nox session.
+#     Build a wheel from the package, and install it into the virtual environment
+#     of the specified Nox session.
 
-    The package requirements are installed using the versions specified in
-    Poetry's lock file.
+#     The package requirements are installed using the versions specified in
+#     Poetry's lock file.
 
-    Args:
-        session: The Session object.
-    """
-    poetry = Poetry(session)
+#     Args:
+#         session: The Session object.
+#     """
+#     poetry = Poetry(session)
 
-    with poetry.export() as requirements:
-        session.install(f"--requirement={requirements}")
+#     with poetry.export() as requirements:
+#         session.install(f"--requirement={requirements}")
 
-    poetry.build("--format=wheel")
+#     poetry.build("--format=wheel")
 
-    version = poetry.version()
-    session.install(
-        "--no-deps", "--force-reinstall", f"dist/{package}-{version}-py3-none-any.whl"
-    )
-
-
-def install(session: Session, *args: str) -> None:
-    """Install development dependencies into the session's virtual environment.
-
-    This function is a wrapper for nox.sessions.Session.install.
-
-    The packages must be managed as development dependencies in Poetry.
-
-    Args:
-        session: The Session object.
-        args: Command-line arguments for ``pip install``.
-    """
-    poetry = Poetry(session)
-    with poetry.export("--dev") as requirements:
-        session.install(f"--constraint={requirements}", *args)
+#     version = poetry.version()
+#     session.install(
+#         "--no-deps", "--force-reinstall", f"dist/{package}-{version}-py3-none-any.whl"
+#     )
 
 
-@nox.session(name="pre-commit", python="3.9")
-def precommit(session: Session) -> None:
-    """Lint using pre-commit."""
-    args = session.posargs or ["run", "--all-files", "--show-diff-on-failure"]
-    install(session, "pre-commit")
-    session.run("pre-commit", *args)
+# def install(session: Session, *args: str) -> None:
+#     """Install development dependencies into the session's virtual environment.
+
+#     This function is a wrapper for nox.sessions.Session.install.
+
+#     The packages must be managed as development dependencies in Poetry.
+
+#     Args:
+#         session: The Session object.
+#         args: Command-line arguments for ``pip install``.
+#     """
+#     poetry = Poetry(session)
+#     with poetry.export("--dev") as requirements:
+#         session.install(f"--constraint={requirements}", *args)
 
 
-@nox.session(python="3.9")
-def safety(session: Session) -> None:
-    """Scan dependencies for insecure packages."""
-    poetry = Poetry(session)
-    with poetry.export("--dev", "--without-hashes") as requirements:
-        install(session, "safety")
-        session.run("safety", "check", f"--file={requirements}", "--bare")
+# @nox.session(name="pre-commit", python="3.9")
+# def precommit(session: Session) -> None:
+#     """Lint using pre-commit."""
+#     args = session.posargs or ["run", "--all-files", "--show-diff-on-failure"]
+#     install(session, "pre-commit")
+#     session.run("pre-commit", *args)
 
 
-@nox.session(python=python_versions)
-def mypy(session: Session) -> None:
-    """Type-check using mypy."""
-    args = session.posargs or ["src", "tests", "docs/conf.py"]
-    install_package(session)
-    install(session, "mypy")
-    session.run("mypy", *args)
-    if not session.posargs:
-        session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
+# @nox.session(python="3.9")
+# def safety(session: Session) -> None:
+#     """Scan dependencies for insecure packages."""
+#     poetry = Poetry(session)
+#     with poetry.export("--dev", "--without-hashes") as requirements:
+#         install(session, "safety")
+#         session.run("safety", "check", f"--file={requirements}", "--bare")
 
 
-@nox.session(python=python_versions)
-def tests(session: Session) -> None:
-    """Run the test suite."""
-    install_package(session)
-    install(session, "coverage[toml]", "pytest")
-    try:
-        session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
-    finally:
-        session.notify("coverage")
+# @nox.session(python=python_versions)
+# def mypy(session: Session) -> None:
+#     """Type-check using mypy."""
+#     args = session.posargs or ["src", "tests", "docs/conf.py"]
+#     install_package(session)
+#     install(session, "mypy")
+#     session.run("mypy", *args)
+#     if not session.posargs:
+#         session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
 
 
-@nox.session
-def coverage(session: Session) -> None:
-    """Produce the coverage report."""
-    # Do not use session.posargs unless this is the only session.
-    has_args = session.posargs and len(session._runner.manifest) == 1
-    args = session.posargs if has_args else ["report"]
-
-    install(session, "coverage[toml]")
-
-    if not has_args and any(Path().glob(".coverage.*")):
-        session.run("coverage", "combine")
-
-    session.run("coverage", *args)
+# @nox.session(python=python_versions)
+# def tests(session: Session) -> None:
+#     """Run the test suite."""
+#     install_package(session)
+#     install(session, "coverage[toml]", "pytest")
+#     try:
+#         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
+#     finally:
+#         session.notify("coverage")
 
 
-@nox.session(python=python_versions)
-def typeguard(session: Session) -> None:
-    """Runtime type checking using Typeguard."""
-    install_package(session)
-    install(session, "pytest", "typeguard")
-    session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
+# @nox.session
+# def coverage(session: Session) -> None:
+#     """Produce the coverage report."""
+#     # Do not use session.posargs unless this is the only session.
+#     has_args = session.posargs and len(session._runner.manifest) == 1
+#     args = session.posargs if has_args else ["report"]
+
+#     install(session, "coverage[toml]")
+
+#     if not has_args and any(Path().glob(".coverage.*")):
+#         session.run("coverage", "combine")
+
+#     session.run("coverage", *args)
 
 
-@nox.session(python=python_versions)
-def xdoctest(session: Session) -> None:
-    """Run examples with xdoctest."""
-    args = session.posargs or ["all"]
-    install_package(session)
-    install(session, "xdoctest")
-    session.run("python", "-m", "xdoctest", package, *args)
+# @nox.session(python=python_versions)
+# def typeguard(session: Session) -> None:
+#     """Runtime type checking using Typeguard."""
+#     install_package(session)
+#     install(session, "pytest", "typeguard")
+#     session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
 
 
-@nox.session(python="3.9")
-def docs(session: Session) -> None:
-    """Build the documentation."""
-    args = session.posargs or ["docs", "docs/_build"]
+# @nox.session(python=python_versions)
+# def xdoctest(session: Session) -> None:
+#     """Run examples with xdoctest."""
+#     args = session.posargs or ["all"]
+#     install_package(session)
+#     install(session, "xdoctest")
+#     session.run("python", "-m", "xdoctest", package, *args)
 
-    if session.interactive and not session.posargs:
-        args.insert(0, "--open-browser")
 
-    builddir = Path("docs", "_build")
-    if builddir.exists():
-        shutil.rmtree(builddir)
+# @nox.session(python="3.9")
+# def docs(session: Session) -> None:
+#     """Build the documentation."""
+#     args = session.posargs or ["docs", "docs/_build"]
 
-    install_package(session)
-    install(session, "sphinx", "sphinx-autobuild")
+#     if session.interactive and not session.posargs:
+#         args.insert(0, "--open-browser")
 
-    if session.interactive:
-        session.run("sphinx-autobuild", *args)
-    else:
-        session.run("sphinx-build", *args)
+#     builddir = Path("docs", "_build")
+#     if builddir.exists():
+#         shutil.rmtree(builddir)
+
+#     install_package(session)
+#     install(session, "sphinx", "sphinx-autobuild")
+
+#     if session.interactive:
+#         session.run("sphinx-autobuild", *args)
+#     else:
+#         session.run("sphinx-build", *args)

@@ -116,9 +116,21 @@ def install(session: Session, *args: str) -> None:
 def precommit(session: Session) -> None:
     """Lint using pre-commit."""
     args = session.posargs or ["run", "--all-files", "--show-diff-on-failure"]
-    install(session, "black", "darglint", "flake8","flake8-bandit", "flake8-bugbear",
-            "flake8-docstrings", "flake8-rst-docstrings", "pep8-naming",
-            "pre-commit", "pre-commit-hooks", "pyupgrade", "reorder-python-imports",)
+    install(
+        session,
+        "black",
+        "darglint",
+        "flake8",
+        "flake8-bandit",
+        "flake8-bugbear",
+        "flake8-docstrings",
+        "flake8-rst-docstrings",
+        "pep8-naming",
+        "pre-commit",
+        "pre-commit-hooks",
+        "pyupgrade",
+        "reorder-python-imports",
+    )
     session.run("pre-commit", *args)
 
 

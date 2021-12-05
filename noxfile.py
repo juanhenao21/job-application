@@ -16,7 +16,7 @@ from nox.sessions import Session
 package = "job_application"
 python_versions = ["3.9"]
 # nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
-nox.options.sessions = "pre-commit", "mypy", "tests"
+nox.options.sessions = "pre-commit", "mypy", "tests", "typeguard"
 
 
 class Poetry:

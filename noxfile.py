@@ -1,5 +1,6 @@
 """Nox sessions."""
 import contextlib
+import sys
 import tempfile
 from pathlib import Path
 from typing import cast

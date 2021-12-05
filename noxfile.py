@@ -109,7 +109,7 @@ def install(session: Session, *args: str) -> None:
         args: Command-line arguments for ``pip install``.
     """
     poetry = Poetry(session)
-    with poetry.export("--include=dev") as requirements:
+    with poetry.export("--dev") as requirements:
         session.install(f"--constraint={requirements}", *args)
 
 

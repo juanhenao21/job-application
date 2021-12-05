@@ -15,8 +15,7 @@ from nox.sessions import Session
 
 package = "job_application"
 python_versions = ["3.9"]
-# nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
-nox.options.sessions = "pre-commit", "mypy", "tests", "typeguard"
+nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
 
 
 class Poetry:
@@ -136,13 +135,13 @@ def precommit(session: Session) -> None:
     session.run("pre-commit", *args)
 
 
-# @nox.session(python="3.9")
-# def safety(session: Session) -> None:
-#     """Scan dependencies for insecure packages."""
-#     poetry = Poetry(session)
-#     with poetry.export("--dev", "--without-hashes") as requirements:
-#         install(session, "safety")
-#         session.run("safety", "check", f"--file={requirements}", "--bare")
+@nox.session(python="3.9")
+def safety(session: Session) -> None:
+    """Scan dependencies for insecure packages."""
+    poetry = Poetry(session)
+    with poetry.export("--dev", "--without-hashes") as requirements:
+        install(session, "safety")
+        session.run("safety", "check", f"--file={requirements}", "--bare")
 
 
 @nox.session(python=python_versions)

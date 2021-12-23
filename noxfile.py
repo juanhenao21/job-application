@@ -1,6 +1,5 @@
 """Nox sessions."""
 import contextlib
-import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -9,6 +8,9 @@ from typing import Iterator
 
 import nox
 from nox.sessions import Session
+
+# import shutil
+# import sys
 
 
 package = "job_application"
@@ -44,6 +46,7 @@ class Poetry:
                 "export",
                 *args,
                 "--format=requirements.txt",
+                "--without-hashes",
                 f"--output={requirements}",
                 external=True,
             )
@@ -114,7 +117,21 @@ def install(session: Session, *args: str) -> None:
 def precommit(session: Session) -> None:
     """Lint using pre-commit."""
     args = session.posargs or ["run", "--all-files", "--show-diff-on-failure"]
-    install(session, "pre-commit")
+    install(
+        session,
+        "black",
+        "darglint",
+        "flake8",
+        "flake8-bandit",
+        "flake8-bugbear",
+        "flake8-docstrings",
+        "flake8-rst-docstrings",
+        "pep8-naming",
+        "pre-commit",
+        "pre-commit-hooks",
+        "pyupgrade",
+        "reorder-python-imports",
+    )
     session.run("pre-commit", *args)
 
 
@@ -172,31 +189,31 @@ def typeguard(session: Session) -> None:
     session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
 
 
-@nox.session(python=python_versions)
-def xdoctest(session: Session) -> None:
-    """Run examples with xdoctest."""
-    args = session.posargs or ["all"]
-    install_package(session)
-    install(session, "xdoctest")
-    session.run("python", "-m", "xdoctest", package, *args)
+# @nox.session(python=python_versions)
+# def xdoctest(session: Session) -> None:
+#     """Run examples with xdoctest."""
+#     args = session.posargs or ["all"]
+#     install_package(session)
+#     install(session, "xdoctest")
+#     session.run("python", "-m", "xdoctest", package, *args)
 
 
-@nox.session(python="3.9")
-def docs(session: Session) -> None:
-    """Build the documentation."""
-    args = session.posargs or ["docs", "docs/_build"]
+# @nox.session(python="3.9")
+# def docs(session: Session) -> None:
+#     """Build the documentation."""
+#     args = session.posargs or ["docs", "docs/_build"]
 
-    if session.interactive and not session.posargs:
-        args.insert(0, "--open-browser")
+#     if session.interactive and not session.posargs:
+#         args.insert(0, "--open-browser")
 
-    builddir = Path("docs", "_build")
-    if builddir.exists():
-        shutil.rmtree(builddir)
+#     builddir = Path("docs", "_build")
+#     if builddir.exists():
+#         shutil.rmtree(builddir)
 
-    install_package(session)
-    install(session, "sphinx", "sphinx-autobuild")
+#     install_package(session)
+#     install(session, "sphinx", "sphinx-autobuild")
 
-    if session.interactive:
-        session.run("sphinx-autobuild", *args)
-    else:
-        session.run("sphinx-build", *args)
+#     if session.interactive:
+#         session.run("sphinx-autobuild", *args)
+#     else:
+#         session.run("sphinx-build", *args)

@@ -2,15 +2,23 @@
 import click
 
 
-@click.command()
+@click.group()
 @click.version_option()
-def main() -> None:
+def cli():
     """Job Application.
 
     Python package to test the data analysis cases for a job application.
     """
-    click.echo("Hello, world!")
 
 
-if __name__ == "__main__":
-    main(prog_name="job-application")  # pragma: no cover
+@cli.command()
+@click.option("--summary", is_flag=True)
+def invision(summary):
+    """Invision forecasting examples.
+
+    Args:
+        summary: flag to show the summary of the data
+    """
+    click.echo("InVision")
+    if summary:
+        print("Holi")

@@ -3,9 +3,8 @@ import click
 import pandas as pd  # type: ignore
 
 from job_application.InVision import data_preprocessing  # type: ignore
-from job_application.InVision import visualization  # type: ignore
-
-# from job_application.InVision import weighted_moving_avg
+from job_application.InVision import visualization
+from job_application.InVision import weighted_moving_avg  # type: ignore
 
 
 @click.group()
@@ -18,15 +17,19 @@ def cli() -> None:
 
 
 @cli.command()
-@click.option("--overview", is_flag=True)
-def invision(overview: bool) -> None:
-    """Invision forecasting examples.
-
-    Args:
-        overview: flag to show the overview of the data.
-    """
+@click.option("--overview", is_flag=True, help="flag to show the overview of the data.")
+@click.option("--moving_average", is_flag=True, help="flag to compute moving average.")
+@click.option(
+    "--num_obs", type=int, default=5, help="number of observations to make the average."
+)
+def invision(overview: bool, moving_average: bool, num_obs: int) -> None:
+    """Invision forecasting examples."""
     click.echo("InVision")
+    data: pd.DataFrame = data_preprocessing._load_data()
+
     if overview:
-        data: pd.DataFrame = data_preprocessing._load_data()
         print(data.head())
         visualization.plot_time_series(data, "Original data", show=True)
+
+    if moving_average:
+        print(weighted_moving_avg.moving_avg(data, num_obs).tail())

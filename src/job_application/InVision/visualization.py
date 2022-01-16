@@ -11,7 +11,18 @@ def plot_time_series(
     filename: str = "default",
     show: bool = False,
 ) -> plt.Figure:
-    """Plot time series."""
+    """Plot time series.
+
+    Args:
+        data (pd.DataFrame): data to be plotted.
+        title (str): title of the figure.
+        save (bool): flag to save the plot.
+        filename (str): filename.
+        show (bool): flag to show the plot.
+
+    Returns:
+        plt.Figure: the figure with the time series.
+    """
     figure = plt.figure(figsize=(16, 9))
     plt.plot(data)
     plt.title(title)

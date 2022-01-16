@@ -4,7 +4,7 @@ import click
 
 @click.group()
 @click.version_option()
-def cli():
+def cli() -> None:
     """Job Application.
 
     Python package to test the data analysis cases for a job application.
@@ -13,7 +13,7 @@ def cli():
 
 @cli.command()
 @click.option("--summary", is_flag=True)
-def invision(summary):
+def invision(summary) -> None:
     """Invision forecasting examples.
 
     Args:

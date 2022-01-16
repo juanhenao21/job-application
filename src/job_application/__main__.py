@@ -1,8 +1,8 @@
 """Command-line interface."""
 import click
-import pandas as pd
+import pandas as pd  # type: ignore
 
-from job_application.InVision import data_preprocessing
+from job_application.InVision import data_preprocessing  # type: ignore
 from job_application.InVision import visualization
 
 # from job_application.InVision import weighted_moving_avg
@@ -29,4 +29,4 @@ def invision(overview: bool) -> None:
     if overview:
         data: pd.DataFrame = data_preprocessing._load_data()
         print(data.head())
-        visualization.plot_time_series(data, "Original data")
+        visualization.plot_time_series(data, "Original data", show=True)

@@ -1,5 +1,11 @@
 """Command-line interface."""
 import click
+import pandas as pd
+
+from job_application.InVision import data_preprocessing
+from job_application.InVision import visualization
+
+# from job_application.InVision import weighted_moving_avg
 
 
 @click.group()
@@ -12,13 +18,15 @@ def cli() -> None:
 
 
 @cli.command()
-@click.option("--summary", is_flag=True)
-def invision(summary: bool) -> None:
+@click.option("--overview", is_flag=True)
+def invision(overview: bool) -> None:
     """Invision forecasting examples.
 
     Args:
-        summary: flag to show the summary of the data
+        overview: flag to show the overview of the data.
     """
     click.echo("InVision")
-    if summary:
-        print("Holi")
+    if overview:
+        data: pd.DataFrame = data_preprocessing._load_data()
+        print(data.head())
+        visualization.plot_time_series(data, "Original data")

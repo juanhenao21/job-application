@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 
 
 def plot_time_series(
-    data: pd.Series,
+    data: pd.DataFrame,
     title: str,
     save: bool = False,
     filename: str = "default",
@@ -19,8 +19,8 @@ def plot_time_series(
     plt.grid(True)
 
     if save:
-        repo: git.Repo = git.Repo(".", search_parent_directories=True)
-        root: str = repo.working_tree_dir
+        repository: git.repo.base.Repo = git.Repo(".", search_parent_directories=True)
+        root: str = repository.working_tree_dir
         plt.savefig(figure, root + f"plot/{filename}.png")
 
     if show:

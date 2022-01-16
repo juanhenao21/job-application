@@ -3,7 +3,7 @@ import click
 import pandas as pd  # type: ignore
 
 from job_application.InVision import data_preprocessing  # type: ignore
-from job_application.InVision import visualization
+from job_application.InVision import visualization  # type: ignore
 
 # from job_application.InVision import weighted_moving_avg
 

@@ -13,7 +13,7 @@ def cli() -> None:
 
 @cli.command()
 @click.option("--summary", is_flag=True)
-def invision(summary) -> None:
+def invision(summary: bool) -> None:
     """Invision forecasting examples.
 
     Args:

@@ -2,7 +2,7 @@
 
 
 def main():
-    """Main function of the module"""
+    """Main function of the module."""
     pass
 
 

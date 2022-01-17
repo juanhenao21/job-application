@@ -19,6 +19,11 @@ Changelog = "https://github.com/juanhenao21/job-application/releases"
 python = "^3.9.1"
 click = "^7.0"
 update = "^0.0.1"
+black = "^21.12b0"
+pandas = "^1.3.5"
+GitPython = "^3.1.26"
+matplotlib = "^3.5.1"
+scikit-learn = "^1.0.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.3"
@@ -31,9 +36,10 @@ sphinx = "^3.1.0"
 sphinx-autobuild = "^0.7.1"
 pre-commit = "^2.5.1"
 pytest-cov = "^3.0.0"
+black = "^21.12b0"
 
 [tool.poetry.scripts]
-job-application = "job_application.__main__:main"
+job-application = "job_application.__main__:cli"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
@@ -44,7 +50,7 @@ source = ["job_application"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 100
+fail_under = 10
 
 [build-system]
 requires = ["poetry>=0.12"]

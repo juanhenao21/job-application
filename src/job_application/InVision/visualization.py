@@ -42,6 +42,45 @@ def plot_time_series(
     return figure
 
 
+def plot_moving_avg_one_point_prediction(
+    data: pd.DataFrame,
+    title: str,
+    save: bool = False,
+    filename: str = "default",
+    show: bool = False,
+) -> plt.Figure:
+    """Plot time series.
+
+    Args:
+        data (pd.DataFrame): data to be plotted.
+        title (str): title of the figure.
+        save (bool): flag to save the plot.
+        filename (str): filename.
+        show (bool): flag to show the plot.
+
+    Returns:
+        plt.Figure: the figure with the time series.
+    """
+    figure = plt.figure(figsize=(16, 9))
+    plt.plot(data[:-1])
+    plt.plot(data[-1:], "ro", markersize=10)
+    plt.title(title)
+    plt.xlabel("Time")
+    plt.grid(True)
+
+    if save:
+        repository: git.repo.base.Repo = git.Repo(".", search_parent_directories=True)
+        root: str = repository.working_tree_dir
+        plt.savefig(figure, root + f"plot/{filename}.png")
+
+    if show:
+        plt.show()
+
+    plt.close()
+
+    return figure
+
+
 def main():
     """Main function of the module."""
     pass

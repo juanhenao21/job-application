@@ -55,7 +55,7 @@ def invision(
     moving_average_smoothing: bool,
     window: int,
     weighted_moving_average_prediction: bool,
-    weights: List[float],
+    weights: list,
 ) -> None:
     """Invision forecasting examples."""
     click.echo("InVision")

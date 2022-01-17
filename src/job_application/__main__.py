@@ -1,4 +1,6 @@
 """Command-line interface."""
+from typing import List
+
 import click
 import pandas as pd  # type: ignore
 
@@ -42,7 +44,7 @@ def cli() -> None:
 )
 @click.option(
     "--weights",
-    type=list,
+    type=List[float],
     default=[0.1, 0.3, 0.6],
     help="weights to compute the average.",
 )
@@ -53,7 +55,7 @@ def invision(
     moving_average_smoothing: bool,
     window: int,
     weighted_moving_average_prediction: bool,
-    weights: list,
+    weights: List[float],
 ) -> None:
     """Invision forecasting examples."""
     click.echo("InVision")

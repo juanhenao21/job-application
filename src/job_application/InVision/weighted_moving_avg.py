@@ -46,7 +46,7 @@ def moving_avg_smoothing(data: pd.DataFrame, window: int) -> pd.DataFrame:
 
 
 def weighted_moving_avg_prediction(
-    data: pd.DataFrame, weights: List[int]
+    data: pd.DataFrame, weights: List[float]
 ) -> pd.DataFrame:
     """Computes the weighted average of the last n observations.
 
@@ -54,7 +54,7 @@ def weighted_moving_avg_prediction(
 
     Args:
         data (pd.DataFrame): series to be analyzed.
-        weights (List[int]): weights.
+        weights (List[float]): weights.
 
     Returns:
         pd.DataFrame: dataframe with the prediction.

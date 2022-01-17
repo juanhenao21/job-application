@@ -24,6 +24,21 @@ def moving_avg_prediction(data: pd.DataFrame, num_obs: int) -> pd.DataFrame:
     return data
 
 
+def moving_avg_smoothing(data: pd.DataFrame, window: int) -> pd.DataFrame:
+    """Smooths the original time series to identify trends.
+
+    Args:
+        data (pd.DataFrame): series to be analyzed.
+        window (int): rolling window size.
+
+    Returns:
+        pd.DataFrame: dataframe with the prediction.
+    """
+    rolling_mean: pd.DataFrame = data.rolling(window=window).mean()
+
+    return rolling_mean
+
+
 def main():
     """Main function of the module."""
     pass

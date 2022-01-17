@@ -3,7 +3,7 @@ import click
 import pandas as pd  # type: ignore
 
 from job_application.InVision import data_preprocessing  # type: ignore
-from job_application.InVision import visualization
+from job_application.InVision import visualization  # type: ignore
 from job_application.InVision import weighted_moving_avg  # type: ignore
 
 
@@ -32,4 +32,7 @@ def invision(overview: bool, moving_average: bool, num_obs: int) -> None:
         visualization.plot_time_series(data, "Original data", show=True)
 
     if moving_average:
-        print(weighted_moving_avg.moving_avg(data, num_obs).tail())
+        mv_avg_prediction = weighted_moving_avg.moving_avg_prediction(data, num_obs)
+        visualization.plot_moving_avg_one_point_prediction(
+            mv_avg_prediction, "Moving Average prediction one point", show=True
+        )

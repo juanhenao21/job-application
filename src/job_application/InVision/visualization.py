@@ -43,7 +43,7 @@ def plot_time_series(
     return figure
 
 
-def plot_moving_avg_one_point_prediction(
+def plot_one_point_prediction(
     data: pd.DataFrame,
     title: str,
     save: bool = False,

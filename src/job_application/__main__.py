@@ -24,20 +24,36 @@ def cli() -> None:
     help="flag to compute the moving average prediction.",
 )
 @click.option(
-    "--num_obs", type=int, default=5, help="number of observations to make the average."
+    "--num_obs",
+    type=int,
+    default=24,
+    help="number of observations to make the average.",
 )
 @click.option(
     "--moving_average_smoothing",
     is_flag=True,
     help="flag to smoothing the time series using moving average.",
 )
-@click.option("--window", type=int, default=5, help="window to smooth the time series.")
+@click.option("--window", type=int, default=4, help="window to smooth the time series.")
+@click.option(
+    "--weighted_moving_average_prediction",
+    is_flag=True,
+    help="flag to compute the weighted moving average prediction.",
+)
+@click.option(
+    "--weights",
+    type=list,
+    default=[0.1, 0.3, 0.6],
+    help="weights to compute the average.",
+)
 def invision(
     overview: bool,
     moving_average_prediction: bool,
     num_obs: int,
     moving_average_smoothing: bool,
     window: int,
+    weighted_moving_average_prediction: bool,
+    weights: list,
 ) -> None:
     """Invision forecasting examples."""
     click.echo("InVision")
@@ -49,7 +65,7 @@ def invision(
 
     if moving_average_prediction:
         mv_avg_prediction = weighted_moving_avg.moving_avg_prediction(data, num_obs)
-        visualization.plot_moving_avg_one_point_prediction(
+        visualization.plot_one_point_prediction(
             mv_avg_prediction, "Moving Average prediction one point", show=True
         )
 
@@ -67,4 +83,14 @@ def invision(
             show=True,
             plot_intervals=True,
             plot_anomalies=True,
+        )
+
+    if weighted_moving_average_prediction:
+        weighted_mv_avg_prediction = weighted_moving_avg.weighted_moving_avg_prediction(
+            data, weights
+        )
+        visualization.plot_one_point_prediction(
+            weighted_mv_avg_prediction,
+            "Weighted Moving Average prediction one point",
+            show=True,
         )
